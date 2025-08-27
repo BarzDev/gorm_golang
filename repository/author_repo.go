@@ -2,8 +2,9 @@ package repository
 
 import (
 	"database/sql"
-	"library-api/model"
 	"log"
+
+	"library-api/model"
 )
 
 type AuthorRepository interface {
@@ -27,19 +28,18 @@ func (a *authorRepository) GetAll() ([]model.Author, error) {
 	}
 	defer rows.Close()
 
-	for rows.Next(){
+	for rows.Next() {
 		var author model.Author
 
-		if err := rows.Scan(&author.Id, &author.Name, &author.Bio); err!=nil{
-		log.Println("authorRepository.Scan", err.Error())
+		if err := rows.Scan(&author.Id, &author.Name, &author.Bio); err != nil {
+			log.Println("authorRepository.Scan", err.Error())
 			return nil, err
 		}
-		
 
 		authors = append(authors, author)
 	}
 
- 	return authors, nil
+	return authors, nil
 }
 
 // GetById implements AuthorRepository.
@@ -48,7 +48,7 @@ func (a *authorRepository) GetById(id int) (model.Author, error) {
 	query := "select * from authors where id = $1"
 
 	row := a.db.QueryRow(query, id)
-	if err := row.Scan(&author.Id, &author.Name, &author.Bio); err!=nil{
+	if err := row.Scan(&author.Id, &author.Name, &author.Bio); err != nil {
 		log.Println("authorRepository.Scan", err.Error())
 		return model.Author{}, err
 	}

@@ -2,20 +2,20 @@ package delivery
 
 import (
 	"fmt"
+	"log"
+
 	"library-api/config"
 	"library-api/delivery/controller"
 	"library-api/repository"
 	"library-api/usecase"
-	"log"
 
 	"github.com/gin-gonic/gin"
 )
 
-
 type Server struct {
 	authorUC usecase.AuthorUseCase
-	engine *gin.Engine
-	host string
+	engine   *gin.Engine
+	host     string
 }
 
 func (s *Server) InitRoute() {
@@ -30,10 +30,9 @@ func (s *Server) Run() {
 	}
 }
 
-
-func NewServer() *Server{
+func NewServer() *Server {
 	cfg, err := config.NewConfig()
-	if err !=nil{
+	if err != nil {
 		log.Fatalf("config error : %v", err)
 	}
 	db := config.ConnectDB()
@@ -43,14 +42,13 @@ func NewServer() *Server{
 	// Inject Repository ke -> Usecase
 	authorUC := usecase.NewAuthorUsecase(authorRepository)
 
-
 	// ROUTE
 	engine := gin.Default()
-	host := fmt.Sprintf(":%s",cfg.ApiPort )
-
+	host := fmt.Sprintf(":%s", cfg.ApiPort)
 
 	return &Server{
 		authorUC: authorUC,
-		engine: engine,
-		host: host}
+		engine:   engine,
+		host:     host,
+	}
 }
