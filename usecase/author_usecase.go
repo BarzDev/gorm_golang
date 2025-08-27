@@ -21,7 +21,7 @@ func (a *authorUsecase) GetAll() ([]model.Author, error) {
 
 // GetById implements AuthorUseCase.
 func (a *authorUsecase) GetById(id int) (model.Author, error) {
-	panic("unimplemented")
+	return a.authorRepository.GetById(id)
 }
 
 func NewAuthorUsecase(repo repository.AuthorRepository) AuthorUseCase {

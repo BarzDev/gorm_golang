@@ -44,7 +44,15 @@ func (a *authorRepository) GetAll() ([]model.Author, error) {
 
 // GetById implements AuthorRepository.
 func (a *authorRepository) GetById(id int) (model.Author, error) {
-	panic("unimplemented")
+	var author model.Author
+	query := "select * from authors where id = $1"
+
+	row := a.db.QueryRow(query, id)
+	if err := row.Scan(&author.Id, &author.Name, &author.Bio); err!=nil{
+		log.Println("authorRepository.Scan", err.Error())
+		return model.Author{}, err
+	}
+	return author, nil
 }
 
 func NewAuthorRepository(db *sql.DB) AuthorRepository {
