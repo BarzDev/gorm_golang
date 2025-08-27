@@ -1,28 +1,24 @@
 package config
 
 import (
-	"database/sql"
 	"fmt"
+	"log"
 
-	_ "github.com/lib/pq"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
-func ConnectDB() *sql.DB {
+func ConnectDB() *gorm.DB {
 	cfg, err := NewConfig()
 	if err != nil {
-		panic(fmt.Errorf("config error : %v", err))
+		log.Fatalf("config error: %v", err)
 	}
 
-	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.Database)
+	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.Database)
 
-	db, err := sql.Open("postgres", psqlInfo)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		panic(err)
-	}
-
-	err = db.Ping()
-	if err != nil {
-		panic(err)
+		log.Fatalf("failed to connect to database: %v", err)
 	}
 	fmt.Println("Connected to database")
 
