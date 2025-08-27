@@ -1,6 +1,8 @@
 package delivery
 
 import (
+	"fmt"
+	"library-api/config"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -9,6 +11,7 @@ import (
 
 type Server struct {
 	engine *gin.Engine
+	host string
 }
 
 func (s *Server) InitRoute() {
@@ -31,10 +34,17 @@ func (s *Server) Run() {
 
 
 func NewServer() *Server{
+	cfg, err := config.NewConfig()
+	if err !=nil{
+		log.Fatalf("config error : %v", err)
+	}
+	db := config.ConnectDB()
+	_ = db
 
 	// ROUTE
 	engine := gin.Default()
+	host := fmt.Sprintf(":%s",cfg.ApiPort )
 
 
-	return &Server{engine: engine}
+	return &Server{engine: engine,host: host}
 }
