@@ -3,6 +3,9 @@ package delivery
 import (
 	"fmt"
 	"library-api/config"
+	"library-api/delivery/controller"
+	"library-api/repository"
+	"library-api/usecase"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -10,19 +13,14 @@ import (
 
 
 type Server struct {
+	authorUC usecase.AuthorUseCase
 	engine *gin.Engine
 	host string
 }
 
 func (s *Server) InitRoute() {
 	rg := s.engine.Group("/")
-
-	rg.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
-
+	controller.NewAuthorController(s.authorUC, rg).Route()
 }
 
 func (s *Server) Run() {
@@ -39,12 +37,20 @@ func NewServer() *Server{
 		log.Fatalf("config error : %v", err)
 	}
 	db := config.ConnectDB()
-	_ = db
+	// Inject DB ke -> Repository
+	authorRepository := repository.NewAuthorRepository(db)
+
+	// Inject Repository ke -> Usecase
+	authorUC := usecase.NewAuthorUsecase(authorRepository)
+
 
 	// ROUTE
 	engine := gin.Default()
 	host := fmt.Sprintf(":%s",cfg.ApiPort )
 
 
-	return &Server{engine: engine,host: host}
+	return &Server{
+		authorUC: authorUC,
+		engine: engine,
+		host: host}
 }
