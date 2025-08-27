@@ -13,14 +13,16 @@ import (
 )
 
 type Server struct {
-	authorUC usecase.AuthorUseCase
-	engine   *gin.Engine
-	host     string
+	authorUC   usecase.AuthorUseCase
+	categoryUC usecase.CategoryUseCase
+	engine     *gin.Engine
+	host       string
 }
 
 func (s *Server) InitRoute() {
 	rg := s.engine.Group("/")
 	controller.NewAuthorController(s.authorUC, rg).Route()
+	controller.NewCategoryController(s.categoryUC, rg).Route()
 }
 
 func (s *Server) Run() {
@@ -38,17 +40,20 @@ func NewServer() *Server {
 	db := config.ConnectDB()
 	// Inject DB ke -> Repository
 	authorRepository := repository.NewAuthorRepository(db)
+	categoryRepository := repository.NewCategoryRepository(db)
 
 	// Inject Repository ke -> Usecase
 	authorUC := usecase.NewAuthorUsecase(authorRepository)
+	categoryUC := usecase.CategoryUseCase(categoryRepository)
 
 	// ROUTE
 	engine := gin.Default()
 	host := fmt.Sprintf(":%s", cfg.ApiPort)
 
 	return &Server{
-		authorUC: authorUC,
-		engine:   engine,
-		host:     host,
+		authorUC:   authorUC,
+		categoryUC: categoryUC,
+		engine:     engine,
+		host:       host,
 	}
 }
