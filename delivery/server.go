@@ -14,6 +14,7 @@ import (
 
 type Server struct {
 	authorUC   usecase.AuthorUseCase
+	bookUC     usecase.BookUseCase
 	categoryUC usecase.CategoryUseCase
 	engine     *gin.Engine
 	host       string
@@ -22,6 +23,7 @@ type Server struct {
 func (s *Server) InitRoute() {
 	rg := s.engine.Group("/")
 	controller.NewAuthorController(s.authorUC, rg).Route()
+	controller.NewBookConroller(s.bookUC, rg).Route()
 	controller.NewCategoryController(s.categoryUC, rg).Route()
 }
 
@@ -40,10 +42,12 @@ func NewServer() *Server {
 	db := config.ConnectDB()
 	// Inject DB ke -> Repository
 	authorRepository := repository.NewAuthorRepository(db)
+	bookRepository := repository.NewBookRepository(db)
 	categoryRepository := repository.NewCategoryRepository(db)
 
 	// Inject Repository ke -> Usecase
 	authorUC := usecase.NewAuthorUsecase(authorRepository)
+	bookUC := usecase.NewBookUsecase(bookRepository)
 	categoryUC := usecase.CategoryUseCase(categoryRepository)
 
 	// ROUTE
@@ -52,6 +56,7 @@ func NewServer() *Server {
 
 	return &Server{
 		authorUC:   authorUC,
+		bookUC:     bookUC,
 		categoryUC: categoryUC,
 		engine:     engine,
 		host:       host,
