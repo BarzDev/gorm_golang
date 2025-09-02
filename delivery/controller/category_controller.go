@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"library-api/shared/common"
 	"library-api/usecase"
 
 	"github.com/gin-gonic/gin"
@@ -29,18 +30,11 @@ func (c *CategoryController) Route() {
 func (c *CategoryController) listCategories(ctx *gin.Context) {
 	categories, err := c.categoryUC.GetAll()
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"code":  http.StatusBadRequest,
-			"error": "failed to get authors",
-		})
+		common.SendErrorResponse(ctx, http.StatusBadRequest, "failed to get categories")
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{
-		"code":    http.StatusOK,
-		"message": "success",
-		"data":    categories,
-	})
+	common.SendSingleResponse(ctx, categories, "success")
 }
 
 func (c *CategoryController) getById(ctx *gin.Context) {
@@ -48,24 +42,14 @@ func (c *CategoryController) getById(ctx *gin.Context) {
 
 	id, err := strconv.Atoi(idParam)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error": "invalid id format",
-		})
-		return
+		common.SendErrorResponse(ctx, http.StatusBadRequest, "invalid id format")
 	}
 
 	category, err := c.categoryUC.GetById(id)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"code":  http.StatusBadRequest,
-			"error": "failed to get category",
-		})
+		common.SendErrorResponse(ctx, http.StatusBadRequest, "failed to get category")
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{
-		"code":    http.StatusOK,
-		"message": "success",
-		"data":    category,
-	})
+	common.SendSingleResponse(ctx, category, "success")
 }

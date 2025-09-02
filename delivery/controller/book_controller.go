@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"library-api/model"
+	"library-api/shared/common"
 	"library-api/usecase"
 
 	"github.com/gin-gonic/gin"
@@ -33,10 +34,7 @@ func (b *BookController) listBooks(c *gin.Context) {
 	if a := c.Query("author_id"); a != "" {
 		id, err := strconv.Atoi(a)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"code":  http.StatusBadRequest,
-				"error": "invalid author_id",
-			})
+			common.SendErrorResponse(c, http.StatusBadRequest, "invalid author_id")
 			return
 		}
 		authorID = &id
@@ -45,10 +43,7 @@ func (b *BookController) listBooks(c *gin.Context) {
 	if k := c.Query("category_id"); k != "" {
 		id, err := strconv.Atoi(k)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"code":  http.StatusBadRequest,
-				"error": "invalid category_id",
-			})
+			common.SendErrorResponse(c, http.StatusBadRequest, "invalid category_id")
 			return
 		}
 		categoryID = &id
@@ -66,18 +61,11 @@ func (b *BookController) listBooks(c *gin.Context) {
 	}
 
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"code":  http.StatusBadRequest,
-			"error": "failed to get books",
-		})
+		common.SendErrorResponse(c, http.StatusBadRequest, "failed to get books")
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"code":    http.StatusOK,
-		"message": "success",
-		"data":    books,
-	})
+	common.SendSingleResponse(c, books, "success")
 }
 
 func (b *BookController) getById(c *gin.Context) {
@@ -85,24 +73,16 @@ func (b *BookController) getById(c *gin.Context) {
 
 	id, err := strconv.Atoi(idParam)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "invalid id format",
-		})
+		common.SendErrorResponse(c, http.StatusBadRequest, "invalid id format")
 		return
 	}
 
 	book, err := b.bookUC.GetById(id)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"code":  http.StatusBadRequest,
-			"error": "failed to get book",
-		})
+		common.SendErrorResponse(c, http.StatusBadRequest, "failed to get book")
+
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"code":    http.StatusOK,
-		"message": "success",
-		"data":    book,
-	})
+	common.SendSingleResponse(c, book, "success")
 }

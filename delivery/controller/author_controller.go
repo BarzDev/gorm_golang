@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"library-api/shared/common"
 	"library-api/usecase"
 
 	"github.com/gin-gonic/gin"
@@ -29,18 +30,11 @@ func (a *AuthorController) Route() {
 func (a *AuthorController) listAuthors(c *gin.Context) {
 	authors, err := a.authorUC.GetAll()
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"code":  http.StatusBadRequest,
-			"error": "failed to get authors",
-		})
+		common.SendErrorResponse(c, http.StatusBadRequest, "failed to get authors")
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"code":    http.StatusOK,
-		"message": "success",
-		"data":    authors,
-	})
+	common.SendSingleResponse(c, authors, "success")
 }
 
 func (a *AuthorController) getById(c *gin.Context) {
@@ -48,24 +42,15 @@ func (a *AuthorController) getById(c *gin.Context) {
 
 	id, err := strconv.Atoi(idParam)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "invalid id format",
-		})
+		common.SendErrorResponse(c, http.StatusBadRequest, "invalid id format")
 		return
 	}
 
 	author, err := a.authorUC.GetById(id)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"code":  http.StatusBadRequest,
-			"error": "failed to get author",
-		})
+		common.SendErrorResponse(c, http.StatusBadRequest, "failed to get author")
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"code":    http.StatusOK,
-		"message": "success",
-		"data":    author,
-	})
+	common.SendSingleResponse(c, author, "success")
 }
