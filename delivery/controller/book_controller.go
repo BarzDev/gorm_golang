@@ -24,7 +24,7 @@ func NewBookConroller(bookUC usecase.BookUseCase, rg *gin.RouterGroup) *BookCont
 }
 
 func (b *BookController) Route() {
-	b.rg.GET("/books/list", b.listBooks)
+	b.rg.GET("/books", b.listBooks)
 	b.rg.GET("/books/:id", b.getById)
 }
 

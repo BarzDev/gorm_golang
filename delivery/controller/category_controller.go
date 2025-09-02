@@ -23,7 +23,7 @@ func NewCategoryController(categoryUC usecase.CategoryUseCase, rg *gin.RouterGro
 }
 
 func (c *CategoryController) Route() {
-	c.rg.GET("/categories/list", c.listCategories)
+	c.rg.GET("/categories", c.listCategories)
 	c.rg.GET("/categories/:id", c.getById)
 }
 

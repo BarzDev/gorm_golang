@@ -23,7 +23,7 @@ func NewAuthorController(authorUC usecase.AuthorUseCase, rg *gin.RouterGroup) *A
 }
 
 func (a *AuthorController) Route() {
-	a.rg.GET("/authors/list", a.listAuthors)
+	a.rg.GET("/authors", a.listAuthors)
 	a.rg.GET("/authors/:id", a.getById)
 }
 
