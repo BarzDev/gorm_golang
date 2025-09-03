@@ -1,20 +1,26 @@
 -- 1. Buat database
 CREATE DATABASE books_app_db;
 
--- 2. Buat tabel author
+-- 2. Tabel authors
 CREATE TABLE authors (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    bio TEXT
+    bio TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ DEFAULT NULL
 );
 
--- 3. Buat tabel category
+-- 3. Tabel categories
 CREATE TABLE categories (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL
+    name VARCHAR(50) NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ DEFAULT NULL
 );
 
--- 4. Buat tabel books
+-- 4. Tabel books
 CREATE TABLE books (
     id SERIAL PRIMARY KEY,
     title VARCHAR(200) NOT NULL,
@@ -22,23 +28,26 @@ CREATE TABLE books (
     category_id INT REFERENCES categories(id) ON DELETE SET NULL,
     published_year INT,
     price NUMERIC(10,2),
-    stock INT DEFAULT 0
+    stock INT DEFAULT 0,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ DEFAULT NULL
 );
 
--- 5. Dummy data untuk authors
+-- 5. Dummy data authors
 INSERT INTO authors (name, bio) VALUES
 ('J.K. Rowling', 'Author of the Harry Potter series'),
 ('George R.R. Martin', 'Author of A Song of Ice and Fire'),
 ('Haruki Murakami', 'Famous Japanese novelist');
 
--- 6. Dummy data untuk categories
+-- 6. Dummy data categories
 INSERT INTO categories (name) VALUES
 ('Fantasy'),
 ('Science Fiction'),
 ('Literary Fiction'),
 ('Non-fiction');
 
--- 7. Dummy data untuk books
+-- 7. Dummy data books
 INSERT INTO books (title, author_id, category_id, published_year, price, stock) VALUES
 ('Harry Potter and the Philosopher''s Stone', 1, 1, 1997, 19.99, 10),
 ('Harry Potter and the Chamber of Secrets', 1, 1, 1998, 21.99, 7),
