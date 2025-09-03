@@ -13,3 +13,7 @@ type Category struct {
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
 }
+
+type CategoryRequest struct {
+	Name string `json:"name" binding:"required"`
+}
