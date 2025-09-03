@@ -38,6 +38,9 @@ library-api/
 ├── model/             # Struct model (Book, Author, Category)
 ├── repository/        # Repository layer (DB access)
 ├── usecase/           # Business logic / usecase layer
+├── shared/             # Reusable utilities
+│   └── common/         # Helper & fungsi global (response formatter, error wrapper, middleware)
+│   └── shared_model/   # Struct umum (response, paging, status)
 └── main.go            # entrypoint server
 ```
 
@@ -68,21 +71,33 @@ Server akan berjalan di `http://localhost:8080`
 ## 📌 Endpoint API
 
 ### Authors
-- `GET /authors/list` → List semua penulis
-- `GET /authors/:id` → Detail penulis
+- `GET /authors` → List semua penulis  
+- `GET /authors/:id` → Detail penulis berdasarkan ID  
+- `POST /authors` → Tambah penulis baru  
+- `PUT /authors/:id` → Update penulis berdasarkan ID  
+- `DELETE /authors/:id` → Hapus penulis berdasarkan ID  
+
+---
 
 ### Categories
-- `GET /categories/list` → List semua kategori
-- `GET /categories/:id` → Detail kategori
+- `GET /categories` → List semua kategori  
+- `GET /categories/:id` → Detail kategori berdasarkan ID  
+- `POST /categories` → Tambah kategori baru  
+- `PUT /categories/:id` → Update kategori berdasarkan ID  
+- `DELETE /categories/:id` → Hapus kategori berdasarkan ID   
+
+---
 
 ### Books
-- `GET /books/list` → List semua buku
-  - Optional query: `author_id`, `category_id`
+- `GET /books` → List semua buku  
+  - Optional query params:  
+    - `author_id` → filter berdasarkan penulis  
+    - `category_id` → filter berdasarkan kategori  
   - Contoh:  
-    - `/books/list?author_id=1` → filter by author  
-    - `/books/list?category_id=2` → filter by category  
-    - `/books/list?author_id=1&category_id=2` → filter keduanya
-- `GET /books/:id` → Detail buku berdasarkan ID
+    - `/books?author_id=1` → filter by author  
+    - `/books?category_id=2` → filter by category  
+    - `/books?author_id=1&category_id=2` → filter keduanya  
+- `GET /books/:id` → Detail buku berdasarkan ID  
 
 **Contoh response JSON:**
 
@@ -115,5 +130,5 @@ Server akan berjalan di `http://localhost:8080`
 
 ## 🧩 License
 
-MIT License © 2025
+Barz License © 2025
 
