@@ -47,7 +47,7 @@ func NewServer() *Server {
 
 	// Inject Repository ke -> Usecase
 	authorUC := usecase.NewAuthorUsecase(authorRepository)
-	bookUC := usecase.NewBookUsecase(bookRepository)
+	bookUC := usecase.NewBookUsecase(authorRepository, bookRepository, categoryRepository)
 	categoryUC := usecase.CategoryUseCase(categoryRepository)
 
 	// ROUTE

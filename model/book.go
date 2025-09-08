@@ -20,3 +20,12 @@ type Book struct {
 	UpdatedAt     time.Time      `json:"updated_at"`
 	DeletedAt     gorm.DeletedAt `json:"-" gorm:"index"`
 }
+
+type BookRequest struct {
+	Title         string  `json:"title" binding:"required"`
+	AuthorID      int     `json:"author_id" binding:"required"`
+	CategoryID    int     `json:"category_id" binding:"required"`
+	PublishedYear int     `json:"published_year" binding:"required"`
+	Price         float64 `json:"price" binding:"required"`
+	Stock         int     `json:"stock" binding:"required"`
+}
