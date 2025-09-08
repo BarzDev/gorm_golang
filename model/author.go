@@ -11,7 +11,7 @@ type Author struct {
 	Name      string         `json:"name"`
 	Bio       *string        `json:"bio"`
 	CreatedAt time.Time      `json:"-"`
-	UpdatedAt time.Time      `json:"updated_at"`
+	UpdatedAt time.Time      `json:"-"`
 	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
 }
 

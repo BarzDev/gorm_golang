@@ -17,7 +17,7 @@ type Book struct {
 	Price         float64        `json:"price"`
 	Stock         int            `json:"stock"`
 	CreatedAt     time.Time      `json:"-"`
-	UpdatedAt     time.Time      `json:"updated_at"`
+	UpdatedAt     time.Time      `json:"-"`
 	DeletedAt     gorm.DeletedAt `json:"-" gorm:"index"`
 }
 

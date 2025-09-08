@@ -10,7 +10,7 @@ type Category struct {
 	Id        int            `json:"id" gorm:"primaryKey;autoIncrement"`
 	Name      string         `json:"name"`
 	CreatedAt time.Time      `json:"-"`
-	UpdatedAt time.Time      `json:"updated_at"`
+	UpdatedAt time.Time      `json:"-"`
 	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
 }
 
