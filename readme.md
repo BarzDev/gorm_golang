@@ -103,26 +103,34 @@ Server akan berjalan di `http://localhost:8080`
 
 ```json
 {
-  "code": 200,
-  "message": "success",
-  "data": [
-    {
-      "id": 1,
-      "title": "Harry Potter and the Philosopher's Stone",
-      "author": {
-        "id": 1,
-        "name": "J.K. Rowling",
-        "bio": "Penulis asal Inggris, terkenal dengan seri Harry Potter."
-      },
-      "category": {
-        "id": 1,
-        "name": "Fantasy"
-      },
-      "published_year": 1997,
-      "price": 150000.00,
-      "stock": 25
+    "Status": {
+        "Code": 200,
+        "Message": "success"
+    },
+    "Data": [
+        {
+            "id": 1,
+            "title": "Harry Potter and the Philosopher's Stone",
+            "author": {
+                "Id": 1,
+                "name": "J.K. Rowling",
+                "bio": "Author of the Harry Potter series"
+            },
+            "category": {
+                "id": 1,
+                "name": "Fantasy"
+            },
+            "published_year": 1997,
+            "price": 19.99,
+            "stock": 10
+        }
+    ],
+    "Paging": {
+        "page": 1,
+        "rowsPerPage": 1,
+        "totalRows": 8,
+        "totalpages": 8
     }
-  ]
 }
 ```
 
