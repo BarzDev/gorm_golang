@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"strconv"
 
 	"library-api/model"
 	"library-api/shared/common"
@@ -31,13 +32,16 @@ func (a *AuthorController) Route() {
 }
 
 func (a *AuthorController) listAuthors(c *gin.Context) {
-	authors, err := a.authorUC.GetAll()
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+	size, _ := strconv.Atoi(c.DefaultQuery("size", "7"))
+
+	authors, paging, err := a.authorUC.GetAll(page, size)
 	if err != nil {
 		common.SendErrorResponse(c, http.StatusBadRequest, "failed to get authors")
 		return
 	}
 
-	common.SendSingleResponse(c, authors, "success")
+	common.SendPagedResponse(c, authors, paging, "success")
 }
 
 func (a *AuthorController) getById(c *gin.Context) {

@@ -3,10 +3,11 @@ package usecase
 import (
 	"library-api/model"
 	"library-api/repository"
+	"library-api/shared/shared_model"
 )
 
 type CategoryUseCase interface {
-	GetAll() ([]model.Category, error)
+	GetAll(page, size int) ([]model.Category, shared_model.Paging, error)
 	GetById(id string) (model.Category, error)
 	Create(payload model.CategoryRequest) (model.Category, error)
 	Update(id string, payload model.CategoryRequest) (model.Category, error)
@@ -44,8 +45,8 @@ func (c *categoryUseCase) Update(id string, payload model.CategoryRequest) (mode
 }
 
 // GetAll implements CategoryUseCase.
-func (c *categoryUseCase) GetAll() ([]model.Category, error) {
-	return c.categoryRepository.GetAll()
+func (c *categoryUseCase) GetAll(page, size int) ([]model.Category, shared_model.Paging, error) {
+	return c.categoryRepository.GetAll(page, size)
 }
 
 // GetById implements CategoryUseCase.

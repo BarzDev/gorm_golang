@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"strconv"
 
 	"library-api/model"
 	"library-api/shared/common"
@@ -31,13 +32,16 @@ func (c *CategoryController) Route() {
 }
 
 func (c *CategoryController) listCategories(ctx *gin.Context) {
-	categories, err := c.categoryUC.GetAll()
+	page, _ := strconv.Atoi(ctx.DefaultQuery("page", "1"))
+	size, _ := strconv.Atoi(ctx.DefaultQuery("size", "7"))
+
+	categories, paging, err := c.categoryUC.GetAll(page, size)
 	if err != nil {
 		common.SendErrorResponse(ctx, http.StatusBadRequest, "failed to get categories")
 		return
 	}
 
-	common.SendSingleResponse(ctx, categories, "success")
+	common.SendPagedResponse(ctx, categories, paging, "success")
 }
 
 func (c *CategoryController) getById(ctx *gin.Context) {

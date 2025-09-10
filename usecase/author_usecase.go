@@ -3,10 +3,11 @@ package usecase
 import (
 	"library-api/model"
 	"library-api/repository"
+	"library-api/shared/shared_model"
 )
 
 type AuthorUseCase interface {
-	GetAll() ([]model.Author, error)
+	GetAll(page, size int) ([]model.Author, shared_model.Paging, error)
 	GetById(id string) (model.Author, error)
 	Create(payload model.AuthorRequest) (model.Author, error)
 	Update(id string, payload model.AuthorRequest) (model.Author, error)
@@ -44,8 +45,8 @@ func (a *authorUsecase) Update(id string, payload model.AuthorRequest) (model.Au
 }
 
 // GetAll implements AuthorUseCase.
-func (a *authorUsecase) GetAll() ([]model.Author, error) {
-	return a.authorRepository.GetAll()
+func (a *authorUsecase) GetAll(page, size int) ([]model.Author, shared_model.Paging, error) {
+	return a.authorRepository.GetAll(page, size)
 }
 
 // GetById implements AuthorUseCase.

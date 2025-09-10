@@ -6,6 +6,7 @@ import (
 
 	"library-api/model"
 	"library-api/shared/common"
+	"library-api/shared/shared_model"
 	"library-api/usecase"
 
 	"github.com/gin-gonic/gin"
@@ -53,14 +54,17 @@ func (b *BookController) listBooks(c *gin.Context) {
 	}
 
 	var (
-		books []model.Book
-		err   error
+		books  []model.Book
+		paging shared_model.Paging
+		err    error
 	)
 
 	if authorID != nil || categoryID != nil {
 		books, err = b.bookUC.Filter(authorID, categoryID)
 	} else {
-		books, err = b.bookUC.GetAll()
+		page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+		size, _ := strconv.Atoi(c.DefaultQuery("size", "7"))
+		books, paging, err = b.bookUC.GetAll(page, size)
 	}
 
 	if err != nil {
@@ -68,7 +72,7 @@ func (b *BookController) listBooks(c *gin.Context) {
 		return
 	}
 
-	common.SendSingleResponse(c, books, "success")
+	common.SendPagedResponse(c, books, paging, "success")
 }
 
 func (b *BookController) getById(c *gin.Context) {

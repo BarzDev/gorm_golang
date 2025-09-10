@@ -1,13 +1,16 @@
 package repository
 
 import (
+	"math"
+
 	"library-api/model"
+	"library-api/shared/shared_model"
 
 	"gorm.io/gorm"
 )
 
 type CategoryRepository interface {
-	GetAll() ([]model.Category, error)
+	GetAll(page, size int) ([]model.Category, shared_model.Paging, error)
 	GetById(id string) (model.Category, error)
 	Create(payload model.CategoryRequest) (model.Category, error)
 	Update(id string, payload model.CategoryRequest) (model.Category, error)
@@ -56,12 +59,31 @@ func (c *categoryRepository) Update(id string, payload model.CategoryRequest) (m
 }
 
 // GetAll implements CategoryRepository.
-func (c *categoryRepository) GetAll() ([]model.Category, error) {
+func (c *categoryRepository) GetAll(page, size int) ([]model.Category, shared_model.Paging, error) {
 	var categories []model.Category
-	if err := c.db.Find(&categories).Error; err != nil {
-		return nil, err
+	var paging shared_model.Paging
+	var totalRows int64
+
+	if err := c.db.Model(&model.Author{}).Count(&totalRows).Error; err != nil {
+		return nil, paging, err
 	}
-	return categories, nil
+
+	offset := (page - 1) * size
+
+	if err := c.db.
+		Limit(size).
+		Offset(offset).
+		Find(&categories).Error; err != nil {
+		return nil, paging, err
+	}
+
+	paging = shared_model.Paging{
+		Page:        page,
+		RowsPerPage: size,
+		TotalRows:   int(totalRows),
+		TotalPages:  int(math.Ceil(float64(totalRows) / float64(size))),
+	}
+	return categories, paging, nil
 }
 
 // GetById implements CategoryRepository.

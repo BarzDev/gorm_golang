@@ -1,13 +1,16 @@
 package repository
 
 import (
+	"math"
+
 	"library-api/model"
+	"library-api/shared/shared_model"
 
 	"gorm.io/gorm"
 )
 
 type BookRepository interface {
-	GetAll() ([]model.Book, error)
+	GetAll(page, size int) ([]model.Book, shared_model.Paging, error)
 	GetById(id string) (model.Book, error)
 	Filter(authorID *int, categoryID *int) ([]model.Book, error)
 	Create(payload model.BookRequest) (model.Book, error)
@@ -77,15 +80,35 @@ func (b *bookRepository) Update(id string, payload model.BookRequest) (model.Boo
 }
 
 // GetAll implements BookRepository.
-func (b *bookRepository) GetAll() ([]model.Book, error) {
+func (b *bookRepository) GetAll(page, size int) ([]model.Book, shared_model.Paging, error) {
 	var books []model.Book
+	var paging shared_model.Paging
+	var totalRows int64
 
-	// Preload Author dan Category
-	if err := b.db.Preload("Author").Preload("Category").Find(&books).Error; err != nil {
-		return nil, err
+	if err := b.db.Model(&model.Book{}).Count(&totalRows).Error; err != nil {
+		return nil, paging, err
 	}
 
-	return books, nil
+	offset := (page - 1) * size
+
+	// Preload Author dan Category
+	if err := b.db.
+		Preload("Author").
+		Preload("Category").
+		Limit(size).
+		Offset(offset).
+		Find(&books).Error; err != nil {
+		return nil, paging, err
+	}
+
+	paging = shared_model.Paging{
+		Page:        page,
+		RowsPerPage: size,
+		TotalRows:   int(totalRows),
+		TotalPages:  int(math.Ceil(float64(totalRows) / float64(size))),
+	}
+
+	return books, paging, nil
 }
 
 // GetById implements BookRepository.

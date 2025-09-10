@@ -6,11 +6,9 @@ type Status struct {
 }
 
 type PagedResponse struct {
-	Status  Status
-	Code    int
-	Message string
-	Data    interface{}
-	Paging  Paging
+	Status Status
+	Data   interface{}
+	Paging Paging
 }
 
 type SingleResponse struct {

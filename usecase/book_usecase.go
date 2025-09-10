@@ -6,10 +6,11 @@ import (
 
 	"library-api/model"
 	"library-api/repository"
+	"library-api/shared/shared_model"
 )
 
 type BookUseCase interface {
-	GetAll() ([]model.Book, error)
+	GetAll(page, size int) ([]model.Book, shared_model.Paging, error)
 	GetById(id string) (model.Book, error)
 	Filter(authorID *int, categoryID *int) ([]model.Book, error)
 	Create(payload model.BookRequest) (model.Book, error)
@@ -69,8 +70,8 @@ func (b *bookUseCase) Update(id string, payload model.BookRequest) (model.Book, 
 }
 
 // GetAll implements BookUseCase.
-func (b *bookUseCase) GetAll() ([]model.Book, error) {
-	return b.bookRepository.GetAll()
+func (b *bookUseCase) GetAll(page, size int) ([]model.Book, shared_model.Paging, error) {
+	return b.bookRepository.GetAll(page, size)
 }
 
 // GetById implements BookUseCase.
