@@ -1,18 +1,18 @@
 package shared_model
 
 type Status struct {
-	Code    int
-	Message string
+	Code    int    `json:"code"`
+	Message string `json:"message"`
 }
 
 type PagedResponse struct {
-	Status Status
-	Data   interface{}
-	Paging Paging
+	Status Status      `json:"status"`
+	Data   interface{} `json:"data"`
+	Paging Paging      `json:"paging"`
 }
 
 type SingleResponse struct {
-	Code    int
-	Data    interface{}
-	Message string
+	Code    int         `json:"code"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
 }
